@@ -11,9 +11,8 @@ LED
 KEIL MICRO VISION 4.0 IDE
 
 # PROCEDURE:
-
-
 ⮚	Open the Keil software and select the New uvision project from Project Menu as shown below.
+
 ⮚	Browse to your project folder and provide the project name and click on save.
 
 ⮚	Once the project is saved a new pop up “Select Device for Target” opens, Select the controller (NXP: LPC1768) from NXP (founded by philips) and click on OK.
@@ -38,11 +37,15 @@ KEIL MICRO VISION 4.0 IDE
 ⮚	Right Click on Target Options to select the option for generating .bin file.
 
 ⮚	Set IROM1 start address as 0x2000. Bootloader will be stored from 0x0000-0x2000 so application should start from 0x2000
+
 ⮚	Write	the	command	to	generate	the .bin file	from
 .axf file
 Command: fromelf --bin projectname.axf --output filename.bin
+
 ⮚	in c/c++ → include paths → desktop (00-libfiles).
+
 ⮚	.Bin file is generated after a rebuild.
+
 ⮚	Check the project folder for the generated .Bin file. ADD FILES:
 
 # ADD FILES:
@@ -53,21 +56,44 @@ Header:
  delay.h, gpio.h, pwm.h, stdulils.h
 
 # PIN DIAGRAM :
-
+<img width="619" height="369" alt="image" src="https://github.com/user-attachments/assets/3f1a7e01-8a80-4cf9-afd6-6669bf83fbc1" />
 
 # CIRCUIT DIAGRAM:
- 
- 
+<img width="1071" height="542" alt="image" src="https://github.com/user-attachments/assets/c79f18c2-d740-40d7-8e99-c923c72224af" />
+  
 # PROGRAM:
+#include <lpc17xx.h>
+#include "pwm.h"
+#include "delay.h"
+#define CYCLE_TIME 100
+/* start the main program */
+int main()
+{
+int dutyCycle;
+SystemInit(); /* Clock and PLL configuration */
+PWM_Init(CYCLE_TIME); /* Initialize the PWM module and the Cycle time(Ton+Toff) is
+set to 255(similar to arduino)*/
+PWM_Start(PWM_3); /* Enable PWM output on PWM_1-PWM_4 (P2_0 - P2_3) */
+while(1)
+{
+for(dutyCycle=0;dutyCycle<CYCLE_TIME;dutyCycle++) /* Increase the Brightness of the
+Leds */
+{
+PWM_SetDutyCycle(PWM_3,dutyCycle); //P2_2
+DELAY_ms(10);
+}
+17
+for(dutyCycle=CYCLE_TIME;dutyCycle>0;dutyCycle--) /* Decrease the Brightness of the
+Leds */
+{
+PWM_SetDutyCycle(PWM_3,dutyCycle); //P2_2
+DELAY_ms(10);
+}
+}
+}
 
-
- 
 # Output:
+<img width="756" height="519" alt="image" src="https://github.com/user-attachments/assets/dfe83cfd-8a57-48d7-9339-57c4ef7bf0ce" />
 
-
-
-
-
-
-
-
+# Result :
+Thus,an embedded C program is written in order to interface PWM with LPC1768.
